@@ -19,6 +19,7 @@ public class SourceFromKafka {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
+        // kafka连接配置信息
         Properties properties = new Properties();
         properties.setProperty("bootstrap.servers", "hadoop100:9092");
         properties.setProperty("group.id", "consumer-group");
@@ -26,7 +27,9 @@ public class SourceFromKafka {
         properties.setProperty("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         properties.setProperty("auto.offset.reset", "latest");
 
+        // 使用addSource 方法从自定义数据源中读取数据
         DataStream<String> dataStream = env.addSource(
+                // kafka消费者 (topic,序列化类型,连接配置)
                 new FlinkKafkaConsumer011<String>(
                         "sensor",
                         new SimpleStringSchema(),
