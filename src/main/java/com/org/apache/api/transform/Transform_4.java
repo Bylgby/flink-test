@@ -12,7 +12,7 @@ import java.util.Collections;
 /**
  * created date 2022/3/3 22:24
  * <p>
- * 多流转换 split select
+ * 流的拆分 split select
  *
  * @author martinyuyy
  */
