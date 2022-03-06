@@ -27,22 +27,19 @@ public class Sink2ElasticSearch {
         DataStreamSource<String> dataStream = env.readTextFile("D:\\flink-test\\src\\main\\resources\\Sensor.txt");
         ArrayList<HttpHost> hosts = new ArrayList<>();
         hosts.add(new HttpHost("localhost", 9200));
-        dataStream.addSink(new ElasticsearchSink.Builder<>(hosts, new ElasticsearchSinkFunction<String>() {
-            @Override
-            public void process(String s, RuntimeContext runtimeContext, RequestIndexer requestIndexer) {
-                // 数据源
-                HashMap<String, String> dataSource = new HashMap<>();
-                dataSource.put("id", s.substring(1));
-                dataSource.put("name", s.substring(2));
+        dataStream.addSink(new ElasticsearchSink.Builder<>(hosts, (ElasticsearchSinkFunction<String>) (s, runtimeContext, requestIndexer) -> {
+            // 数据源
+            HashMap<String, String> dataSource = new HashMap<>();
+            dataSource.put("id", s.substring(1));
+            dataSource.put("name", s.substring(2));
 
-                // 包装请求
-                IndexRequest request = Requests.indexRequest()
-                        .index("sensor")
-                        .type("sensor")
-                        .source(dataSource);
-                // 发送请求
-                requestIndexer.add(request);
-            }
+            // 包装请求
+            IndexRequest request = Requests.indexRequest()
+                    .index("sensor")
+                    .type("sensor")
+                    .source(dataSource);
+            // 发送请求
+            requestIndexer.add(request);
         }).build());
         env.execute();
     }
