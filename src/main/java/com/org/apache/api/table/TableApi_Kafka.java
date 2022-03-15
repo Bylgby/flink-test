@@ -59,7 +59,6 @@ public class TableApi_Kafka {
         // sink
         resTable.insertInto("outputTable");
 
-
         env.execute();
     }
 }
