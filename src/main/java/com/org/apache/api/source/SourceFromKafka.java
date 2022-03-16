@@ -3,7 +3,7 @@ package com.org.apache.api.source;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 
 import java.util.Properties;
 
@@ -30,7 +30,7 @@ public class SourceFromKafka {
         // 使用addSource 方法从自定义数据源中读取数据
         DataStream<String> dataStream = env.addSource(
                 // kafka消费者 (topic,序列化类型,连接配置)
-                new FlinkKafkaConsumer011<String>(
+                new FlinkKafkaConsumer<String>(
                         "sensor",
                         new SimpleStringSchema(),
                         properties

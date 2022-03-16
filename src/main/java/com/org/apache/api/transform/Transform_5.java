@@ -8,7 +8,6 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.ConnectedStreams;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
-import org.apache.flink.streaming.api.datastream.SplitStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.co.CoFlatMapFunction;
 import org.apache.flink.util.Collector;
@@ -36,31 +35,31 @@ public class Transform_5 {
             return new SensorReading(fields[0], Long.parseLong(fields[1]), Double.parseDouble(fields[2]));
         });
 
-        // 分流,按照温度值分流
-        SplitStream<SensorReading> splitStream = mapStream.split(value -> value.getTemperature() > 30 ? Collections.singletonList("high") : Collections.singletonList("low"));
-
-        DataStream<SensorReading> high = splitStream.select("high");
-        DataStream<SensorReading> low = splitStream.select("low");
-
-        // 合流
-        ConnectedStreams<SensorReading, SensorReading> connectedStreams = high.connect(low);
-        DataStream<Object> streamOperator = connectedStreams.flatMap(new CoFlatMapFunction<SensorReading, SensorReading, Object>() {
-            // 第一条流的处理方式
-            @Override
-            public void flatMap1(SensorReading value, Collector<Object> out) throws Exception {
-                out.collect(new Tuple2<String, SensorReading>(value.getId() + "第一条流的内容:", value));
-            }
-
-            //第二条流的处理方式
-            @Override
-            public void flatMap2(SensorReading value, Collector<Object> out) throws Exception {
-                out.collect(new Tuple1<String>("第二流: " + value.getId()));
-            }
-        });
-
-        // union 合流
-
-        DataStream<SensorReading> unionStream = low.union(high);
+//        // 分流,按照温度值分流
+//        SplitStream<SensorReading> splitStream = mapStream.split(value -> value.getTemperature() > 30 ? Collections.singletonList("high") : Collections.singletonList("low"));
+//
+//        DataStream<SensorReading> high = splitStream.select("high");
+//        DataStream<SensorReading> low = splitStream.select("low");
+//
+//        // 合流
+//        ConnectedStreams<SensorReading, SensorReading> connectedStreams = high.connect(low);
+//        DataStream<Object> streamOperator = connectedStreams.flatMap(new CoFlatMapFunction<SensorReading, SensorReading, Object>() {
+//            // 第一条流的处理方式
+//            @Override
+//            public void flatMap1(SensorReading value, Collector<Object> out) throws Exception {
+//                out.collect(new Tuple2<String, SensorReading>(value.getId() + "第一条流的内容:", value));
+//            }
+//
+//            //第二条流的处理方式
+//            @Override
+//            public void flatMap2(SensorReading value, Collector<Object> out) throws Exception {
+//                out.collect(new Tuple1<String>("第二流: " + value.getId()));
+//            }
+//        });
+//
+//        // union 合流
+//
+//        DataStream<SensorReading> unionStream = low.union(high);
 
     }
 }

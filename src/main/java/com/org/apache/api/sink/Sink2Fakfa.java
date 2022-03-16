@@ -5,8 +5,8 @@ import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer011;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
 
 import java.util.Properties;
 
@@ -33,7 +33,7 @@ public class Sink2Fakfa {
         // 使用addSource 方法从自定义数据源中读取数据
         DataStream<String> inputStream = env.addSource(
                 // kafka消费者 (topic,序列化类型,连接配置)
-                new FlinkKafkaConsumer011<String>(
+                new FlinkKafkaConsumer<String>(
                         "sensor",
                         new SimpleStringSchema(),
                         properties
@@ -48,7 +48,7 @@ public class Sink2Fakfa {
 
         // sink
         outputStream.addSink(
-                new FlinkKafkaProducer011<>(
+                new FlinkKafkaProducer<>(
                         "hadoop100:9092",
                         "flinkSink",
                         new SimpleStringSchema()

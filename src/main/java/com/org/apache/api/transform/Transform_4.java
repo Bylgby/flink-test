@@ -4,7 +4,6 @@ import com.org.apache.beans.SensorReading;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
-import org.apache.flink.streaming.api.datastream.SplitStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 import java.util.Collections;
@@ -31,14 +30,14 @@ public class Transform_4 {
 
         mapStream.print("map");
 
-        // 分流,按照温度值分流
-        SplitStream<SensorReading> splitStream = mapStream.split(value -> value.getTemperature() > 30 ? Collections.singletonList("high") : Collections.singletonList("low"));
-
-        DataStream<SensorReading> high = splitStream.select("high");
-        DataStream<SensorReading> low = splitStream.select("low");
-
-        high.print("high");
-        low.print("low");
+//        // 分流,按照温度值分流
+//        SplitStream<SensorReading> splitStream = mapStream.split(value -> value.getTemperature() > 30 ? Collections.singletonList("high") : Collections.singletonList("low"));
+//
+//        DataStream<SensorReading> high = splitStream.select("high");
+//        DataStream<SensorReading> low = splitStream.select("low");
+//
+//        high.print("high");
+//        low.print("low");
         env.execute();
     }
 }
